@@ -88,7 +88,7 @@ const quizDaten = {
         checklist: "checkliste"
     },
     Staedte: {
-        begriffe: ["Algier", "Alexandria", "Addis Abeba", "Casablanca", "Daressalam", "Dakar", "Durban", "Johannesburg", "Kapstadt", "Kinshasa", "Kairo", "Lagos", "Ngong", "Pretoria"],
+        begriffe: ["Algier", "Alexandria", "Addis Abeba", "Casablanca", "Daressalam", "Dakar", "Durban", "Johannesburg", "Kapstadt", "Kinshasa", "Kairo", "Lagos", "Nairobi", "Pretoria"],
         checklist: "checkliste"
     }
 };
