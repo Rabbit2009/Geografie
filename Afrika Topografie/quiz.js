@@ -272,18 +272,8 @@ function karteKlick(event) {
             const checklistenEintrag = document.getElementById(checklistId(begriff));
             if (checklistenEintrag) checklistenEintrag.textContent = "❌ " + begriff;
 
-            document.getElementById("meldung").textContent = "❌ Drei Fehlversuche";
-            aktuelleFrage++;
-            falscheVersuche = 0;
-            antwortPause = true;
-
-            setTimeout(() => {
-                entferneRichtigePunkte();
-                document.getElementById("meldung").textContent = "";
-                antwortPause = false;
-                zeigeFrage();
-            }, 700);
-            return;
+            document.getElementById("meldung").innerHTML = "❌ Falsch — klicke jetzt auf den roten Punkt";
+            zeigeRichtigePunkte(richtigeKreise);
         }
 
         if (falscheVersuche >= 2) {
