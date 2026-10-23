@@ -44,7 +44,7 @@ const koordinatenDateien = {
 };
 
 const koordinatenReferenzBreiten = {
-    Topografie: 1200,
+    Topografie: 650,
     Laender: 650,
     Staedte: 650
 };
@@ -100,6 +100,7 @@ let richtigePunkte = [];
 let aktuelleKategorie = "Topografie";
 let fragen = quizDaten[aktuelleKategorie].fragen;
 let ladeVorgang = 0;
+let antwortPause = false;
 
 function frageEintraege(kategorie = aktuelleKategorie) {
     const daten = quizDaten[kategorie];
@@ -113,6 +114,7 @@ function ladeKategorie(kategorie) {
     aktuelleFrage = 0;
     punkte = 0;
     falscheVersuche = 0;
+    antwortPause = false;
     entferneRichtigePunkte();
     document.querySelectorAll(".abdruck").forEach((marker) => marker.remove());
 
@@ -183,7 +185,7 @@ function zeigeFrage() {
 
 
 function karteKlick(event) {
-    if (aktuelleFrage >= fragen.length) return;
+    if (aktuelleFrage >= fragen.length || antwortPause) return;
     
     const pageX = event.pageX;
     const pageY = event.pageY;
@@ -264,6 +266,25 @@ function karteKlick(event) {
       .innerHTML = "❌ Falsch";
 
         falscheVersuche++;
+
+        if (aktuelleKategorie === "Laender" && falscheVersuche >= 3) {
+            const begriff = fragen[aktuelleFrage][0];
+            const checklistenEintrag = document.getElementById(checklistId(begriff));
+            if (checklistenEintrag) checklistenEintrag.textContent = "❌ " + begriff;
+
+            document.getElementById("meldung").textContent = "❌ Drei Fehlversuche";
+            aktuelleFrage++;
+            falscheVersuche = 0;
+            antwortPause = true;
+
+            setTimeout(() => {
+                entferneRichtigePunkte();
+                document.getElementById("meldung").textContent = "";
+                antwortPause = false;
+                zeigeFrage();
+            }, 700);
+            return;
+        }
 
         if (falscheVersuche >= 2) {
             zeigeRichtigePunkte(richtigeKreise);
