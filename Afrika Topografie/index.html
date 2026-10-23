@@ -31,10 +31,14 @@ h1{
 }
 
 #kategorieButtons{
+    position:fixed;
+    top:14px;
+    right:18px;
     display:flex;
-    justify-content:center;
+    justify-content:flex-end;
     gap:8px;
-    margin:12px;
+    margin:0;
+    z-index:1000;
 }
 
 #kategorieButtons button{
@@ -50,6 +54,19 @@ h1{
     color:white;
     border-color:#1769aa;
     background:#1769aa;
+}
+
+@media (max-width: 600px){
+    #kategorieButtons{
+        top:8px;
+        right:8px;
+        gap:4px;
+    }
+
+    #kategorieButtons button{
+        padding:7px 9px;
+        font-size:12px;
+    }
 }
 
 #cursorDot{
