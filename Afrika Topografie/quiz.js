@@ -239,7 +239,9 @@ function karteKlick(event) {
         .replaceAll("ß", "ss");
 
     const checklistenEintrag = document.getElementById(id);
-    if (checklistenEintrag) checklistenEintrag.textContent = "✅ " + begriff;
+    if (checklistenEintrag && falscheVersuche < 2) {
+        checklistenEintrag.textContent = "✅ " + begriff;
+    }
 
     document.getElementById("meldung")
         .innerHTML = "✅ Richtig";
@@ -273,10 +275,6 @@ function karteKlick(event) {
             if (checklistenEintrag) checklistenEintrag.textContent = "❌ " + begriff;
 
             document.getElementById("meldung").innerHTML = "❌ Falsch — klicke jetzt auf den roten Punkt";
-            zeigeRichtigePunkte(richtigeKreise);
-        }
-
-        if (falscheVersuche >= 2) {
             zeigeRichtigePunkte(richtigeKreise);
         }
 
