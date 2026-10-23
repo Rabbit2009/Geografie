@@ -267,7 +267,7 @@ function karteKlick(event) {
 
         falscheVersuche++;
 
-        if (falscheVersuche >= 3) {
+        if (falscheVersuche >= 2) {
             const begriff = fragen[aktuelleFrage][0];
             const checklistenEintrag = document.getElementById(checklistId(begriff));
             if (checklistenEintrag) checklistenEintrag.textContent = "❌ " + begriff;
