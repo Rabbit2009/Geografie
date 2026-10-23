@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Afrika Quiz Kalibrierung</title>
+
+<style>
+body{
+    font-family:Arial;
+    text-align:center;
+}
+
+#container{
+    position:relative;
+    display:inline-block;
+}
+
+#map{
+    width:1200px;
+}
+
+.marker{
+    position:absolute;
+    width:20px;
+    height:20px;
+    border-radius:50%;
+    background:red;
+    transform:translate(-50%,-50%);
+    pointer-events:none;
+}
+
+textarea{
+    width:90%;
+    height:250px;
+}
+</style>
+</head>
+<body>
+
+<h1>Afrika-Kalibrierung</h1>
+
+<h2 id="current"></h2>
+
+<div id="container">
+
+<img id="map" src="afrika.png">
+
+</div>
+
+<h3>Koordinaten</h3>
+
+<textarea id="output"></textarea>
+
+<script>
+
+const begriffe = [
+
+"Atlas_1",
+"Atlas_2",
+"Hochland_Aethiopien",
+"Namib_1",
+"Namib_2",
+"Kongobecken",
+"Kanarische_Inseln",
+"Madagaskar",
+"Somali_Halbinsel",
+"Kilimandscharo",
+"Nil_1",
+"Nil_2",
+"Nil_3",
+"Niger_1",
+"Niger_2",
+"Kongo",
+"Sambesi_1",
+"Sambesi_2",
+"Tanganyikasee",
+"Malawisee",
+"Tschadsee",
+"Nasserstausee",
+"Mittelmeer",
+"Atlantik_1",
+"Atlantik_2",
+"Rotes_Meer",
+"Golf_von_Aden",
+"Indischer_Ozean_1",
+"Indischer_Ozean_2",
+"Suezkanal",
+"Strasse_von_Gibraltar",
+"Kalahari",
+"Oranje",
+"Sansibar",
+"Victoriasee",
+"Sahara"
+
+];
+
+let index = 0;
+let daten = {};
+
+aktualisieren();
+
+function aktualisieren(){
+
+if(index < begriffe.length){
+
+document.getElementById("current").innerText =
+"Klicke: " + begriffe[index];
+
+}
+else{
+
+document.getElementById("current").innerText =
+"Fertig ✅";
+
+document.getElementById("output").value =
+JSON.stringify(daten,null,2);
+
+}
+
+}
+
+document.getElementById("map").onclick =
+function(e){
+
+if(index >= begriffe.length) return;
+
+const rect =
+this.getBoundingClientRect();
+
+const x =
+Math.round(e.clientX - rect.left);
+
+const y =
+Math.round(e.clientY - rect.top);
+
+daten[begriffe[index]] = {
+x:x,
+y:y
+};
+
+const marker =
+document.createElement("div");
+
+marker.className = "marker";
+marker.style.left = x+"px";
+marker.style.top = y+"px";
+
+document.getElementById("container")
+.appendChild(marker);
+
+index++;
+
+document.getElementById("output").value =
+JSON.stringify(daten,null,2);
+
+aktualisieren();
+
+};
+
+</script>
+
+</body>
+</html>

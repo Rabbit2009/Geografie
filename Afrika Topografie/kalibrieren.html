@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Afrika Kalibrierung</title>
+
+<style>
+
+
+body{
+    margin:0;
+    min-height:100vh;
+    overflow-x:hidden;
+    overflow-y:auto;
+    font-family:Arial,sans-serif;
+    text-align:center;
+    background:#f5f5f5;
+}
+
+h1{
+    display:block;
+    margin:20px 0;
+    color:#111;
+    font-size:2em;
+}
+
+#listenButtons{
+    position:fixed;
+    top:14px;
+    right:18px;
+    display:flex;
+    gap:6px;
+    z-index:10;
+}
+
+#listenButtons button{
+    padding:9px 12px;
+    border:1px solid #999;
+    border-radius:7px;
+    background:white;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+#listenButtons button.aktiv{
+    color:white;
+    border-color:#1769aa;
+    background:#1769aa;
+}
+
+#quizContainer{
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    gap:25px;
+    margin-top:20px;
+}
+
+#map{
+    width:650px;      /* kleineres Bild */
+    height:auto;
+    border:2px solid black;
+    cursor:none;
+
+    user-select:none;
+    -webkit-user-drag:none;
+    -webkit-user-select:none;
+}
+
+#cursorDot{
+    position:fixed;
+    display:none;
+    width:16px;
+    height:16px;
+    border:2px solid white;
+    border-radius:50%;
+    background:#00aaff;
+    box-shadow:0 0 12px #00aaff;
+    pointer-events:none;
+    z-index:99999;
+    transform:translate(-50%, -50%);
+}
+
+#listenContainer{
+    width:360px;
+}
+
+.listenSpalte{
+    display:none;
+    height:700px;
+    overflow-y:auto;
+    background:white;
+    padding:12px;
+    text-align:left;
+    border-radius:10px;
+    box-shadow:0 0 10px rgba(0,0,0,0.15);
+}
+
+.listenSpalte.aktiv{
+    display:block;
+}
+
+.listenSpalte h2{
+    position:sticky;
+    top:-12px;
+    margin:0 0 10px;
+    padding:8px 0;
+    background:white;
+    font-size:18px;
+}
+
+.listenSpalte ul{
+    margin:0;
+    padding:0;
+}
+
+.listenSpalte li{
+    margin:7px 0;
+    list-style:none;
+    font-size:14px;
+}
+
+@media (max-width: 1100px){
+    #quizContainer{
+        flex-wrap:wrap;
+    }
+
+    #map{
+        max-width:95vw;
+    }
+
+    #listenContainer{
+        width:min(95vw, 360px);
+    }
+
+    #listenButtons{
+        position:static;
+        justify-content:center;
+        flex-wrap:wrap;
+        margin:0 10px 12px;
+    }
+}
+
+.marker{
+    position:fixed;
+    width:16px;
+    height:16px;
+    border-radius:50%;
+    background:red;
+    transform:translate(-50%,-50%);
+    pointer-events:none;
+}
+
+textarea{
+    width:95%;
+    height:250px;
+    margin-top:20px;
+}
+
+#aktuellerBegriff{
+    font-size:32px;
+    font-weight:bold;
+    margin:20px;
+}
+
+
+.abdruck{
+    position:fixed;
+    width:20px;
+    height:20px;
+    border-radius:50%;
+
+    pointer-events:none;
+
+    transform:translate(-50%, -50%);
+
+    z-index:9999;
+}
+
+.richtig{
+    background:rgba(0,255,0,0.25);
+    border:3px solid green;
+}
+
+.falsch{
+    background:rgba(255,0,0,0.25);
+    border:3px solid red;
+}
+
+
+</style>
+</head>
+<body>
+
+<nav id="listenButtons" aria-label="Listen auswählen">
+    <button type="button" class="aktiv" data-liste="Topografie">Topografie</button>
+    <button type="button" data-liste="Laender">Länder</button>
+    <button type="button" data-liste="Staedte">Städte</button>
+</nav>
+
+<h1>Afrika-Kalibrierung</h1>
+
+<div id="aktuellerBegriff"></div>
+
+<div id="quizContainer">
+
+    <img
+        id="map"
+        src="afrika.png"
+        alt="Afrika Karte"
+        draggable="false"
+    >
+
+    <div id="listenContainer">
+        <section id="spalteTopografie" class="listenSpalte aktiv">
+            <h2>Topografie</h2>
+            <ul id="listeTopografie"></ul>
+        </section>
+        <section id="spalteLaender" class="listenSpalte">
+            <h2>Länder</h2>
+            <ul id="listeLaender"></ul>
+        </section>
+        <section id="spalteStaedte" class="listenSpalte">
+            <h2>Städte (Hauptstädte)</h2>
+            <ul id="listeStaedte"></ul>
+        </section>
+    </div>
+
+</div>
+
+<h3>JSON-Ausgabe</h3>
+
+<textarea id="output"></textarea>
+
+<div id="cursorDot" aria-hidden="true"></div>
+
+<script>
+
+const map = document.getElementById("map");
+const cursorDot = document.getElementById("cursorDot");
+
+function waehleListe(name) {
+    document.querySelectorAll(".listenSpalte").forEach((spalte) => {
+        spalte.classList.toggle("aktiv", spalte.id === "spalte" + name);
+    });
+
+    document.querySelectorAll("#listenButtons button").forEach((button) => {
+        button.classList.toggle("aktiv", button.dataset.liste === name);
+    });
+
+    aktuelleListe = name;
+    zeigeNaechsten();
+}
+
+document.querySelectorAll("#listenButtons button").forEach((button) => {
+    button.addEventListener("click", () => waehleListe(button.dataset.liste));
+});
+
+map.addEventListener("mouseenter", () => {
+    cursorDot.style.display = "block";
+});
+
+map.addEventListener("mousemove", (event) => {
+    cursorDot.style.left = event.clientX + "px";
+    cursorDot.style.top = event.clientY + "px";
+});
+
+map.addEventListener("mouseleave", () => {
+    cursorDot.style.display = "none";
+});
+
+const topografie = [
+
+"Atlas_1",
+"Atlas_2",
+"Hochland_Aethiopien",
+"Namib_1",
+"Namib_2",
+"Kongobecken",
+"Kanarische_Inseln",
+"Madagaskar",
+"Somali_Halbinsel",
+"Kilimandscharo",
+"Nil_1",
+"Nil_2",
+"Nil_3",
+"Niger_1",
+"Niger_2",
+"Kongo",
+"Sambesi_1",
+"Sambesi_2",
+"Tanganyikasee",
+"Malawisee",
+"Tschadsee",
+"Nasserstausee",
+"Mittelmeer",
+"Atlantik_1",
+"Atlantik_2",
+"Rotes_Meer",
+"Golf_von_Aden",
+"Indischer_Ozean_1",
+"Indischer_Ozean_2",
+"Suezkanal",
+"Strasse_von_Gibraltar",
+"Kalahari",
+"Oranje",
+"Sansibar",
+"Victoriasee",
+"Sahara"
+
+];
+
+const laender = [
+    "Südsudan", "Nigeria", "Algerien", "Senegal", "Tunesien", "Kamerun",
+    "Sudan", "Mali", "Kenia", "Namibia", "Angola", "Südafrika", "Libyen",
+    "Somalia", "Tansania", "Demokratische Republik Kongo", "Marokko",
+    "Ägypten", "Äthiopien", "Eritrea"
+];
+
+const staedte = [
+    "Algier", "Alexandria", "Addis Abeba", "Casablanca", "Daressalam",
+    "Dakar", "Durban", "Johannesburg", "Kapstadt", "Kinshasa", "Kairo",
+    "Lagos", "Ngong", "Pretoria"
+];
+
+const kategorien = {
+    Topografie: topografie.map((id) => ({ id, label: id.replaceAll("_", " ") })),
+    Laender: laender.map((label, nummer) => ({ id: `Land_${nummer + 1}`, label })),
+    Staedte: staedte.map((label, nummer) => ({ id: `Stadt_${nummer + 1}`, label }))
+};
+
+let aktuelleListe = "Topografie";
+const indices = { Topografie: 0, Laender: 0, Staedte: 0 };
+let daten = {};
+
+Object.entries(kategorien).forEach(([kategorie, begriffe]) => {
+    const listeId = {
+        Topografie: "listeTopografie",
+        Laender: "listeLaender",
+        Staedte: "listeStaedte"
+    }[kategorie];
+
+    begriffe.forEach((begriff, nummer) => {
+        const eintrag = document.createElement("li");
+        eintrag.id = `check_${kategorie}_${nummer}`;
+        eintrag.textContent = "⬜ " + begriff.label;
+        document.getElementById(listeId).appendChild(eintrag);
+    });
+});
+
+zeigeNaechsten();
+
+function zeigeNaechsten(){
+    const begriffe = kategorien[aktuelleListe];
+    const index = indices[aktuelleListe];
+
+    if(index >= begriffe.length){
+
+        document.getElementById(
+            "aktuellerBegriff"
+        ).innerHTML =
+            `✅ ${aktuelleListe === "Laender" ? "Länder" : aktuelleListe === "Staedte" ? "Städte" : "Topografie"} fertig!`;
+
+        return;
+    }
+
+    document.getElementById(
+        "aktuellerBegriff"
+    ).innerHTML =
+        "Klicke auf: <b>" +
+        begriffe[index].label +
+        "</b>";
+}
+
+document.getElementById("map")
+.addEventListener("click", function(event){
+
+    const begriffe = kategorien[aktuelleListe];
+    const index = indices[aktuelleListe];
+    if(index >= begriffe.length) return;
+
+    const rect =
+        this.getBoundingClientRect();
+
+    const x =
+        Math.round(event.clientX - rect.left);
+
+    const y =
+        Math.round(event.clientY - rect.top);
+
+    const aktuellerBegriff = begriffe[index];
+
+    daten[aktuellerBegriff.id] = {
+        x:x,
+        y:y
+    };
+
+    document.getElementById(`check_${aktuelleListe}_${index}`).textContent =
+        "✅ " + aktuellerBegriff.label;
+
+    const marker =
+        document.createElement("div");
+
+    marker.className = "marker";
+    marker.style.left = event.clientX + "px";
+    marker.style.top = event.clientY + "px";
+
+    document.body.appendChild(marker);
+
+    document.getElementById("output")
+        .value =
+        JSON.stringify(
+            daten,
+            null,
+            2
+        );
+
+    indices[aktuelleListe]++;
+
+    zeigeNaechsten();
+
+});
+
+</script>
+
+</body>
+</html>

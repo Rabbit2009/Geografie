@@ -1,0 +1,146 @@
+{
+  "Atlas_1": {
+    "x": 83,
+    "y": 69
+  },
+  "Atlas_2": {
+    "x": 146,
+    "y": 48
+  },
+  "Hochland_Aethiopien": {
+    "x": 305,
+    "y": 173
+  },
+  "Namib_1": {
+    "x": 187,
+    "y": 370
+  },
+  "Namib_2": {
+    "x": 175,
+    "y": 336
+  },
+  "Kongobecken": {
+    "x": 227,
+    "y": 252
+  },
+  "Kanarische_Inseln": {
+    "x": 39,
+    "y": 72
+  },
+  "Madagaskar": {
+    "x": 343,
+    "y": 340
+  },
+  "Somali_Halbinsel": {
+    "x": 360,
+    "y": 180
+  },
+  "Kilimandscharo": {
+    "x": 295,
+    "y": 258
+  },
+  "Nil_1": {
+    "x": 270,
+    "y": 94
+  },
+  "Nil_2": {
+    "x": 274,
+    "y": 162
+  },
+  "Nil_3": {
+    "x": 274,
+    "y": 216
+  },
+  "Niger_1": {
+    "x": 97,
+    "y": 142
+  },
+  "Niger_2": {
+    "x": 140,
+    "y": 192
+  },
+  "Kongo": {
+    "x": 224,
+    "y": 222
+  },
+  "Sambesi_1": {
+    "x": 232,
+    "y": 313
+  },
+  "Sambesi_2": {
+    "x": 265,
+    "y": 318
+  },
+  "Tanganyikasee": {
+    "x": 274,
+    "y": 264
+  },
+  "Malawisee": {
+    "x": 296,
+    "y": 299
+  },
+  "Tschadsee": {
+    "x": 169,
+    "y": 154
+  },
+  "Nasserstausee": {
+    "x": 260,
+    "y": 107
+  },
+  "Mittelmeer": {
+    "x": 203,
+    "y": 52
+  },
+  "Atlantik_1": {
+    "x": 34,
+    "y": 36
+  },
+  "Atlantik_2": {
+    "x": 96,
+    "y": 324
+  },
+  "Rotes_Meer": {
+    "x": 301,
+    "y": 126
+  },
+  "Golf_von_Aden": {
+    "x": 348,
+    "y": 166
+  },
+  "Indischer_Ozean_1": {
+    "x": 370,
+    "y": 219
+  },
+  "Indischer_Ozean_2": {
+    "x": 314,
+    "y": 404
+  },
+  "Suezkanal": {
+    "x": 82,
+    "y": 41
+  },
+  "Strasse_von_Gibraltar": {
+    "x": 278,
+    "y": 72
+  },
+  "Kalahari": {
+    "x": 223,
+    "y": 354
+  },
+  "Oranje": {
+    "x": 229,
+    "y": 390
+  },
+  "Sansibar": {
+    "x": 326,
+    "y": 268
+  },
+  "Victoriasee": {
+    "x": 278,
+    "y": 251
+  },
+  "Sahara": {
+    "x": 146,
+    "y": 105
+  }
+}
