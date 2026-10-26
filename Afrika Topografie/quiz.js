@@ -64,7 +64,7 @@ const quizDaten = {
             ["Niger", "Niger_1", "Niger_2"],
             ["Kongo", "Kongo"],
             ["Sambesi", "Sambesi_1", "Sambesi_2"],
-            ["Tanganyikasee", "Tanganyikasee"],
+            ["Tanganyikasee", "Tanganjikasee"],
             ["Malawisee", "Malawisee"],
             ["Tschadsee", "Tschadsee"],
             ["Nasserstausee", "Nasserstausee"],
@@ -219,7 +219,7 @@ function karteKlick(event) {
       const entfernung =
           Math.sqrt(dx*dx + dy*dy);
 
-      if(entfernung <= 25
+      if(entfernung <= 15
       ){
           getroffen = true;
       }
