@@ -64,7 +64,7 @@ const quizDaten = {
             ["Niger", "Niger_1", "Niger_2"],
             ["Kongo", "Kongo"],
             ["Sambesi", "Sambesi_1", "Sambesi_2"],
-            ["Tanganyikasee", "Tanganjikasee"],
+            ["Tanganjikasee", "Tanganjikasee"],
             ["Malawisee", "Malawisee"],
             ["Tschadsee", "Tschadsee"],
             ["Nasserstausee", "Nasserstausee"],
